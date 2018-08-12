@@ -2,6 +2,25 @@
 
 const knexHelper = require('../helpers/knexHelper').get();
 
+const _findTopicFunc = async topicId => {
+    try {
+        const topicFindFlag = await knexHelper
+            .from('TOPICS')
+            .where({ topicId })
+            .andWhere('status', '!=', 'deleted')
+            .first();
+        
+        if (!topicFindFlag) {
+            throw {
+                statusCode  : 400,
+                message     : '해당 Topic을 찾을 수 없습니다.'
+            };
+        }
+    } catch(error) {
+        throw error;
+    }
+}
+
 module.exports = {
     getItems : topicId => {
         return knexHelper
@@ -18,23 +37,12 @@ module.exports = {
         topicItemData['topicId'] = topicId;
 
         try {
-            const topicFindFlag = await knexHelper
-                .from('TOPICS')
-                .where({ topicId })
-                .andWhere('status', '!=', 'deleted')
-                .first();
-            
-            if (!topicFindFlag) {
-                throw {
-                    statusCode  : 400,
-                    message     : '해당 Topic을 찾을 수 없습니다.'
-                };
-            }
+            await _findTopicFunc(topicId);
 
             return knexHelper('TOPIC_ITEMS')
                 .insert(topicItemData);   
         } catch(error) {
             throw error;
         }
-    }
+    },
 };
