@@ -1,7 +1,5 @@
 'use strict';
 
-const validator = require('validator');
-
 module.exports = {
     bodyCheck : (checkRule, checkData) => {
         for (let key in checkData) {
