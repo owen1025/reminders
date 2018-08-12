@@ -2,7 +2,8 @@
 
 const validationHelper = require('../../helpers/validationHelper');
 
-const topicModel = require('../../models/topicModel');
+const topicModel        = require('../../models/topicModel'),
+      topicItemModel    = require('../../models/topicItemModel');
 
 module.exports = {
     getTopics : async (req, res) => {
@@ -14,7 +15,7 @@ module.exports = {
                 .json({ topics });
         } catch(error) {
             res
-                .sendStatus(500)
+                .status(500)
                 .json({ message : error.message });
         }
     },
@@ -73,8 +74,20 @@ module.exports = {
         }
     },
 
-    getTopicIncludeItems : (req, res) => {
+    getTopicIncludeItems : async (req, res) => {
+        try {
+            const { topic_id } = req.params;
 
+            const items = await topicItemModel.getItems(topic_id);
+
+            res
+                .status(200)
+                .json({ items });
+        } catch(error) {
+            res
+                .status(500)
+                .json({ message : error.message });
+        }
     },
 
     createTopicIncludeItem : (req, res) => {
