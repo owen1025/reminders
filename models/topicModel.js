@@ -25,11 +25,9 @@ module.exports = {
             .update({ name });
     },
 
-    // deleteTopic : topicId => {
-    //     const id = topicId;
-
-    //     return knexHelper('TOPIC')
-    //         .where({ id })
-    //         .update({ state : 'deleted' })
-    // }
+    deleteTopic : topicId => {
+        return knexHelper('TOPICS')
+            .where({ topicId })
+            .update({ status : 'deleted' })
+    }
 };

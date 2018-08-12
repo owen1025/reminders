@@ -59,8 +59,18 @@ module.exports = {
         }
     },
 
-    deleteTopic : (req, res) => {
+    deleteTopic : async (req, res) => {
+        try {
+            const { topic_id } = req.params;
 
+            await topicModel.deleteTopic(topic_id);
+
+            res.sendStatus(200);
+        } catch(error) {
+            res
+                .status(error.statusCode || 500)
+                .json({ message : error.message || '' });
+        }
     },
 
     getTopicIncludeItems : (req, res) => {
