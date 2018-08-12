@@ -1,6 +1,6 @@
 'use strict';
 
-const validationHelper = require('../../helpers/validationHelper');
+const validationHelper  = require('../../helpers/validationHelper');
 
 const topicModel        = require('../../models/topicModel'),
       topicItemModel    = require('../../models/topicItemModel');
@@ -90,8 +90,25 @@ module.exports = {
         }
     },
 
-    createTopicIncludeItem : (req, res) => {
+    createTopicIncludeItem : async (req, res) => {
+        try {
+            const { topic_id } = req.params;
+            const { item } = req.body;
 
+            validationHelper
+                .bodyCheck({
+                    name        : 'string',
+                    remind_at   : 'string',
+                }, item);
+            
+            await topicItemModel.createItem(topic_id, item);
+
+            res.sendStatus(201);
+        } catch(error) {
+            res
+                .status(error.statusCode || 500)
+                .json({ message : error.message || '' });
+        }
     },
 
     updateTopicIncludeItem : (req, res) => {
