@@ -1,10 +1,11 @@
 'use strict';
 
-const createError = require('http-errors');
+const validationHelper = require('../../helpers/validationHelper');
+
 const topicModel = require('../../models/topicModel');
 
 module.exports = {
-    getTopics : async (req, res, next) => {
+    getTopics : async (req, res) => {
         try {
             const topics = await topicModel.getTopics();
 
@@ -12,20 +13,29 @@ module.exports = {
                 .status(200)
                 .json({ topics });
         } catch(error) {
-            next(createError(error));
+            res
+                .sendStatus(500)
+                .json({ message : error.message });
         }
     },
 
-    createTopic : async (req, res, next) => {
+    createTopic : async (req, res) => {
         try {
             const { item } = req.body;
 
+            validationHelper
+                .bodyCheck({
+                    name    : 'integer',
+                }, item);
+            
             await topicModel.createTopic(item);
 
             res
                 .sendStatus(201);
         } catch(error) {
-            console.log(error);
+            res
+                .status(error.statusCode || 500)
+                .json({ message : error.message || '' });
         }
     },
 
