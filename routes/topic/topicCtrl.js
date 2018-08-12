@@ -29,10 +29,11 @@ module.exports = {
                     name    : 'string',
                 }, item);
             
-            await topicModel.createTopic(item);
+            const createdTopicInfo = await topicModel.createTopic(item);
 
             res
-                .sendStatus(201);
+                .status(201)
+                .json({ topic : createdTopicInfo });
         } catch(error) {
             res
                 .status(error.statusCode || 500)
@@ -50,9 +51,11 @@ module.exports = {
                     name    : 'string',
                 }, item);
 
-            await topicModel.updateTopic(topic_id, item);
+            const updatedTopicInfo = await topicModel.updateTopic(topic_id, item);
 
-            res.sendStatus(200);
+            res
+                .status(200)
+                .json({ topic : updatedTopicInfo });
         } catch(error) {
             res
                 .status(error.statusCode || 500)

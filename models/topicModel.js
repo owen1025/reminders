@@ -2,6 +2,13 @@
 
 const knexHelper = require('../helpers/knexHelper').get();
 
+const _findTopicFunc = topicId => {
+    return knexHelper
+        .from('TOPICS')
+        .where({ topicId })
+        .first();
+}
+
 module.exports = {
     getTopics : () => {
         return knexHelper
@@ -11,19 +18,31 @@ module.exports = {
             .orderBy('created_at', 'DESC');
     },
 
-    createTopic : topicData => {
-        const { name } = topicData;
+    createTopic : async topicData => {
+        try {
+            const { name } = topicData;
 
-        return knexHelper('TOPICS')
-            .insert({ name });
+            const createdTopicId = await knexHelper('TOPICS')
+                .insert({ name });
+            
+            return _findTopicFunc(createdTopicId[0]);
+        } catch(error) {
+            throw error;
+        }
     },
 
-    updateTopic : (topicId, topicData) => {
-        const { name } = topicData;
+    updateTopic : async (topicId, topicData) => {
+        try {
+            const { name } = topicData;
 
-        return knexHelper('TOPICS')
-            .where({ topicId })
-            .update({ name });
+            await knexHelper('TOPICS')
+                .where({ topicId })
+                .update({ name });
+            
+            return _findTopicFunc(topicId);
+        } catch(error) {
+            throw error;
+        }
     },
 
     deleteTopic : topicId => {
