@@ -19,13 +19,11 @@ app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    next();
+    next(new Error(404));
 });
 
 // error handler
-app.use((err, req, res) => {
-    console.log(err)
-  
+app.use((err, req, res) => {  
     res
         .status(err.status || 500)
         .json({
