@@ -16,8 +16,17 @@ module.exports = {
         }
     },
 
-    createTopic : (req, res) => {
+    createTopic : async (req, res, next) => {
+        try {
+            const { item } = req.body;
 
+            await topicModel.createTopic(item);
+
+            res
+                .sendStatus(201);
+        } catch(error) {
+            console.log(error);
+        }
     },
 
     updateTopic : (req, res) => {

@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const multer = require('multer')();
 
 const topicController = require('./topicCtrl');
 
@@ -26,7 +27,7 @@ router.get('/:topic_id(\\d+)/item', topicController.getTopicIncludeItems);
  * @type POST
  * @description Topic 만들기
  */
-router.post('/', topicController.createTopic);
+router.post('/', multer.array(), topicController.createTopic);
 /**
  * @url BASE_URL/topic/:topic_id/item
  * @type POST

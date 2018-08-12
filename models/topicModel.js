@@ -9,4 +9,28 @@ module.exports = {
             .from('TOPICS')
             .where('status', '!=', 'deleted')
     },
+
+    createTopic : topicData => {
+        const { name } = topicData;
+
+        return knexHelper('TOPICS')
+            .insert({ name });
+    },
+
+    // updateTopic : (topicId, topicData) => {
+    //     const id = topicId;
+    //     const name = { topicData };
+
+    //     return knexHelper('TOPIC')
+    //         .where({ id })
+    //         .update({ name });
+    // },
+
+    // deleteTopic : topicId => {
+    //     const id = topicId;
+
+    //     return knexHelper('TOPIC')
+    //         .where({ id })
+    //         .update({ state : 'deleted' })
+    // }
 };
