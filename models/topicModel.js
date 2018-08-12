@@ -7,7 +7,8 @@ module.exports = {
         return knexHelper
             .select('topicId AS id', 'name', 'created_at')
             .from('TOPICS')
-            .where('status', '!=', 'deleted');
+            .where('status', '!=', 'deleted')
+            .orderBy('created_at', 'DESC');
     },
 
     createTopic : topicData => {
