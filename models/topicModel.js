@@ -17,14 +17,13 @@ module.exports = {
             .insert({ name });
     },
 
-    // updateTopic : (topicId, topicData) => {
-    //     const id = topicId;
-    //     const name = { topicData };
+    updateTopic : (topicId, topicData) => {
+        const { name } = topicData;
 
-    //     return knexHelper('TOPIC')
-    //         .where({ id })
-    //         .update({ name });
-    // },
+        return knexHelper('TOPICS')
+            .where({ topicId })
+            .update({ name });
+    },
 
     // deleteTopic : topicId => {
     //     const id = topicId;

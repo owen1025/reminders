@@ -25,7 +25,7 @@ module.exports = {
 
             validationHelper
                 .bodyCheck({
-                    name    : 'integer',
+                    name    : 'string',
                 }, item);
             
             await topicModel.createTopic(item);
@@ -39,8 +39,24 @@ module.exports = {
         }
     },
 
-    updateTopic : (req, res) => {
+    updateTopic : async (req, res) => {
+        try {
+            const { topic_id } = req.params;
+            const { item } = req.body;
 
+            validationHelper
+                .bodyCheck({
+                    name    : 'string',
+                }, item);
+
+            await topicModel.updateTopic(topic_id, item);
+
+            res.sendStatus(200);
+        } catch(error) {
+            res
+                .status(error.statusCode || 500)
+                .json({ message : error.message || '' });
+        }
     },
 
     deleteTopic : (req, res) => {
