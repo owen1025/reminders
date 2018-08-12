@@ -2,23 +2,11 @@
 
 const knexHelper = require('../helpers/knexHelper').get();
 
-const _findTopicFunc = async topicId => {
-    try {
-        const topicFindFlag = await knexHelper
-            .from('TOPICS')
-            .where({ topicId })
-            .andWhere('status', '!=', 'deleted')
-            .first();
-        
-        if (!topicFindFlag) {
-            throw {
-                statusCode  : 400,
-                message     : '해당 Topic을 찾을 수 없습니다.'
-            };
-        }
-    } catch(error) {
-        throw error;
-    }
+const _findTopicItemFunc = itemId => {
+    return knexHelper
+        .from('TOPIC_ITEMS')
+        .where({ itemId })
+        .first();
 }
 
 module.exports = {
@@ -37,12 +25,37 @@ module.exports = {
         topicItemData['topicId'] = topicId;
 
         try {
-            await _findTopicFunc(topicId);
+            const topicFindFlag = await knexHelper
+                .from('TOPICS')
+                .where({ topicId })
+                .andWhere('status', '!=', 'deleted')
+                .first();
+            
+            if (!topicFindFlag) {
+                throw {
+                    statusCode  : 400,
+                    message     : '해당 Topic을 찾을 수 없습니다.'
+                };
+            }
 
-            return knexHelper('TOPIC_ITEMS')
-                .insert(topicItemData);   
+            const createdItemId = await knexHelper('TOPIC_ITEMS')
+                .insert(topicItemData);
+                
+            return _findTopicItemFunc(createdItemId[0]);
         } catch(error) {
             throw error;
         }
     },
+
+    updateItem : async (itemId, updateTopicItemData) => {
+        try {
+            const updatedItemId = await knexHelper('TOPIC_ITEMS')
+                .update(updateTopicItemData)
+                .where({ itemId });
+            
+            return _findTopicItemFunc(itemId);
+        } catch(error) {
+            throw error;
+        }
+    }
 };

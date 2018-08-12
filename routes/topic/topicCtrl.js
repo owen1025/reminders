@@ -101,9 +101,11 @@ module.exports = {
                     remind_at   : 'string',
                 }, item);
             
-            await topicItemModel.createItem(topic_id, item);
+            const createdItemInfo = await topicItemModel.createItem(topic_id, item);
 
-            res.sendStatus(201);
+            res
+                .status(201)
+                .json({ item : createdItemInfo });
         } catch(error) {
             res
                 .status(error.statusCode || 500)
@@ -111,8 +113,28 @@ module.exports = {
         }
     },
 
-    updateTopicIncludeItem : (req, res) => {
+    updateTopicIncludeItem : async (req, res) => {
+        try {
+            const { item_id } = req.params;
+            const { item } = req.body;
 
+            validationHelper
+                .bodyCheck({
+                    name        : 'string',
+                    status      : 'string',
+                    remind_at   : 'string',
+                }, item);
+
+            const updatedItemInfo = await topicItemModel.updateItem(item_id, item);
+
+            res
+                .status(200)
+                .json({ item : updatedItemInfo });
+        } catch(error) {
+            res
+                .status(error.statusCode || 500)
+                .json({ message : error.message || '' });
+        }  
     },
 
     deleteTopicIncludeItem : (req, res) => {
