@@ -49,7 +49,7 @@ module.exports = {
 
     updateItem : async (itemId, updateTopicItemData) => {
         try {
-            const updatedItemId = await knexHelper('TOPIC_ITEMS')
+            await knexHelper('TOPIC_ITEMS')
                 .update(updateTopicItemData)
                 .where({ itemId });
             
@@ -57,5 +57,11 @@ module.exports = {
         } catch(error) {
             throw error;
         }
-    }
+    },
+
+    deleteItem : itemId => {
+        return knexHelper('TOPIC_ITEMS')
+            .update({ status : 'deleted' })
+            .where({ itemId });
+    },
 };

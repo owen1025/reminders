@@ -1,9 +1,9 @@
 'use strict';
 
-const validationHelper  = require('../../helpers/validationHelper');
-
 const topicModel        = require('../../models/topicModel'),
       topicItemModel    = require('../../models/topicItemModel');
+
+const validationHelper  = require('../../helpers/validationHelper');
 
 module.exports = {
     getTopics : async (req, res) => {
@@ -137,7 +137,18 @@ module.exports = {
         }  
     },
 
-    deleteTopicIncludeItem : (req, res) => {
+    deleteTopicIncludeItem : async (req, res) => {
+        try {
+            const { item_id } = req.params;
 
+            await topicItemModel.deleteItem(item_id);
+
+            res
+                .sendStatus(200);
+        } catch(error) {
+            res
+                .status(500)
+                .json({ message : error.message });
+        }
     },
 };
